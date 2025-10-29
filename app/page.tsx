@@ -9,11 +9,16 @@ export default function Home() {
     <>
       <Navbar />
       <main className="relative pt-28">
-        <section className="relative h-[70vh] min-h-[560px]">
-          <div className="absolute inset-0">
+        {/* HERO */}
+        <section className="relative h-[70vh] min-h-[560px] overflow-hidden">
+          {/* Bakgrunn: DarkVeil */}
+          <div className="absolute inset-0 -z-10">
             <DarkVeil className="rounded-none" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            {/* Diskré gradient for kontrast mot tekst */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none" />
           </div>
+
+          {/* Innhold */}
           <div className="relative z-10 h-full flex flex-col items-center justify-center text-center container-p">
             <TrueFocus sentence="Andreassen Technology" className="mb-6" />
             <DecryptedText
