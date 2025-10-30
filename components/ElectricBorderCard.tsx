@@ -28,18 +28,18 @@ export default function ElectricBorderCard({ title, href, imageSrc, subtitle }: 
         style={{ borderRadius: 16 }}
         className="h-full"
       >
-        <div className="relative h-full min-h-[200px] flex flex-col">
-          <div className="relative h-40 overflow-hidden rounded-t-xl">
+        <div className="relative h-full min-h-[260px] flex flex-col">
+          <div className="relative h-52 overflow-hidden rounded-t-xl">
             <img
               src={imageSrc}
               alt={title}
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="p-4 flex-1 flex flex-col">
-            <h3 className="text-lg font-bold mb-1">{title}</h3>
+          <div className="p-5 flex-1 flex flex-col">
+            <h3 className="text-xl font-bold mb-2">{title}</h3>
             {subtitle && (
-              <p className="text-sm text-white/70">{subtitle}</p>
+              <p className="text-base text-white/70">{subtitle}</p>
             )}
           </div>
         </div>
