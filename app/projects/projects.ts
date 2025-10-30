@@ -20,13 +20,13 @@ export const projects: Project[] = [
   },
   {
     title: "Andreassen Technology",
-    href: "#",
+    href: "/projects/andreassen-technology",
     imageSrc: "https://picsum.photos/seed/tech/800/600?grayscale",
     subtitle: "Tech & utvikling"
   },
   {
     title: "StudyAI",
-    href: "#",
+    href: "/projects/studyai",
     imageSrc: "https://picsum.photos/seed/studyai/800/600?grayscale",
     subtitle: "AI-basert læring"
   }
