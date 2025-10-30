@@ -10,25 +10,25 @@ export const projects: Project[] = [
     title: "Bergen Badstu",
     href: "https://www.bergenbadstu.no/",
     imageSrc: "/bergenBadstueAtech.png",
-    subtitle: "Nettside og booking"
+    subtitle: "Website design, development and ongoing management"
   },
   {
     title: "Andreassen Kapital",
     href: "https://www.andreassenkapital.no/",
     imageSrc: "/andreassenKapitalaTech.png",
-    subtitle: "Investeringsselskap"
+    subtitle: "Corporate website — designed, developed and maintained"
   },
   {
-    title: "Andreassen Technology",
+    title: "Private Consulting",
     href: "/projects/andreassen-technology",
-    imageSrc: "https://picsum.photos/seed/tech/800/600?grayscale",
-    subtitle: "Tech & utvikling"
+    imageSrc: "/andreassentechconsults.png",
+    subtitle: "Tailored tech solutions and advisory"
   },
   {
     title: "StudyAI",
     href: "/projects/studyai",
-    imageSrc: "https://picsum.photos/seed/studyai/800/600?grayscale",
-    subtitle: "AI-basert læring"
+    imageSrc: "/studyaiAtech.png",
+    subtitle: "AI-driven app and website study tool — coming soon"
   }
 ];
 
