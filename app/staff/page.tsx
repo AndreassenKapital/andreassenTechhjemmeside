@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ProfileCard from "@/components/ProfileCard";
+import SimpleProfileCard from "@/components/SimpleProfileCard";
 
 export default function StaffPage() {
   return (
@@ -12,18 +12,11 @@ export default function StaffPage() {
           <p className="mb-10 text-center text-lg opacity-80 max-w-xl">
             Meet the people driving Andreassen Technology.
           </p>
-          <div className="w-full max-w-md">
-            <ProfileCard
-              avatarUrl="/CTOaTech.png"
-              name="Chief Technology Officer"
-              title="Leading innovation and product development at Andreassen Technology"
-              handle=""
-              status=""
-              contactText=""
-              showUserInfo={false}
-              enableTilt={true}
-            />
-          </div>
+          <SimpleProfileCard
+            name="Chief Technology Officer"
+            role="Leading innovation and product development at Andreassen Technology"
+            imageSrc="/CTOaTech.png"
+          />
         </div>
       </main>
       <Footer />
