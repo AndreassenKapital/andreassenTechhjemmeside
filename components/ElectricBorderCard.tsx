@@ -34,6 +34,7 @@ export default function ElectricBorderCard({ title, href, imageSrc, subtitle }: 
               src={imageSrc}
               alt={title}
               className="w-full h-full object-cover"
+              loading="lazy"
             />
           </div>
           <div className="p-5 flex-1 flex flex-col">

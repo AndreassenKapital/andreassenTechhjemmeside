@@ -9,13 +9,13 @@ export const projects: Project[] = [
   {
     title: "Bergen Badstu",
     href: "https://www.bergenbadstu.no/",
-    imageSrc: "https://picsum.photos/seed/bergen/800/600?grayscale",
+    imageSrc: "/bergenBadstueAtech.png",
     subtitle: "Nettside og booking"
   },
   {
     title: "Andreassen Kapital",
     href: "https://www.andreassenkapital.no/",
-    imageSrc: "https://picsum.photos/seed/kapital/800/600?grayscale",
+    imageSrc: "/andreassenKapitalaTech.png",
     subtitle: "Investeringsselskap"
   },
   {
