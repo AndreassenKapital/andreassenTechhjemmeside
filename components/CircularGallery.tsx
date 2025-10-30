@@ -120,7 +120,8 @@ class Media {
     bend,
     textColor,
     borderRadius = 0,
-    font
+    font,
+    href
   }) {
     this.extra = 0;
     this.geometry = geometry;
@@ -137,6 +138,7 @@ class Media {
     this.textColor = textColor;
     this.borderRadius = borderRadius;
     this.font = font;
+    this.href = href;
 
     this.createShader();
     this.createMesh();
@@ -403,7 +405,8 @@ class App {
         bend,
         textColor,
         borderRadius,
-        font
+        font,
+        href: data.href
       });
     });
   }
@@ -412,20 +415,53 @@ class App {
     this.isDown = true;
     this.scroll.position = this.scroll.current;
     this.start = e.touches ? e.touches[0].clientX : e.clientX;
+    this.startY = e.touches ? e.touches[0].clientY : e.clientY;
+    this.hasMoved = false;
   }
 
   onTouchMove(e) {
     if (!this.isDown) return;
 
     const x = e.touches ? e.touches[0].clientX : e.clientX;
+    const y = e.touches ? e.touches[0].clientY : e.clientY;
     const distance = (this.start - x) * (this.scrollSpeed * 0.025);
+
+    // Check if user has moved significantly
+    if (Math.abs(this.start - x) > 10 || Math.abs(this.startY - y) > 10) {
+      this.hasMoved = true;
+    }
 
     this.scroll.target = this.scroll.position + distance;
   }
 
-  onTouchUp() {
+  onTouchUp(e) {
+    if (this.isDown && !this.hasMoved) {
+      // It's a click, try to find which media was clicked
+      const clickX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+      const clickY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+      this.handleClick(clickX, clickY);
+    }
+
     this.isDown = false;
     this.onCheck();
+  }
+
+  handleClick(x, y) {
+    if (!this.medias) return;
+
+    // Convert screen coordinates to viewport coordinates
+    const rect = this.container.getBoundingClientRect();
+    const normalizedX = ((x - rect.left) / rect.width) * 2 - 1;
+    const normalizedY = -(((y - rect.top) / rect.height) * 2 - 1);
+
+    // Find which media item is at the center of the viewport
+    const centerIndex = Math.round(Math.abs(this.scroll.current) / this.medias[0].width);
+    
+    // Get the media at center
+    const media = this.medias[centerIndex];
+    if (media && media.href && media.href !== '#') {
+      window.open(media.href, '_blank', 'noopener,noreferrer');
+    }
   }
 
   onWheel(e) {

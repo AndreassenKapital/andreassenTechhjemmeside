@@ -1,20 +1,35 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import CircularGallery from "@/components/CircularGallery";
+import { projects } from "./projects";
 
 export default function Projects() {
-  const cards = Array.from({ length: 6 });
+  // Transform projects data to match CircularGallery format
+  const galleryItems = projects.map((project) => ({
+    image: project.imageSrc,
+    text: project.title,
+    href: project.href
+  }));
+
   return (
     <>
       <Navbar />
-      <main className="container-p pt-28">
-        <h1 className="text-3xl font-bold mb-6">Projects</h1>
-        <p className="text-white/70 mb-8">Coming soon. Selected work will appear here.</p>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {cards.map((_, i) => (
-            <div key={i} className="glass rounded-2xl p-6 h-40 flex items-end">
-              <span className="text-white/40">Placeholder #{i+1}</span>
-            </div>
-          ))}
+      <main className="relative pt-28 pb-20">
+        <div className="container-p mb-12">
+          <h1 className="text-3xl font-bold mb-4">Projects</h1>
+          <p className="text-white/70">
+            Klikk på et prosjekt for å se mer. Scroll med musepekeren eller swipe på mobile enheter.
+          </p>
+        </div>
+        <div style={{ height: '70vh', minHeight: '600px' }}>
+          <CircularGallery
+            items={galleryItems}
+            bend={3}
+            textColor="#ffffff"
+            borderRadius={0.05}
+            scrollEase={0.02}
+            font="bold 2rem Inter, sans-serif"
+          />
         </div>
       </main>
       <Footer />
