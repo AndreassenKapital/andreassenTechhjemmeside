@@ -19,17 +19,18 @@ export default function Contact() {
       <Navbar />
       <main className="min-h-screen bg-neutral-950 text-neutral-100 pt-28 pb-20">
         <div className="container-p">
-          <div className="max-w-2xl mx-auto">
-            {/* Header Section */}
-            <section className="text-center mb-12">
-              <h1 className="text-4xl font-bold mb-3">Contact</h1>
-              <p className="text-lg opacity-80">
-                We'd love to hear about your project. Whether you're looking for collaboration, consulting, or full-stack development, reach out below.
-              </p>
-            </section>
+          {/* Header Section */}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold mb-3">Contact</h1>
+            <p className="text-lg opacity-80">
+              We'd love to hear about your project. Whether you're looking for collaboration, consulting, or full-stack development, reach out below.
+            </p>
+          </div>
 
-            {/* Form Card */}
-            <form onSubmit={onSubmit} className="w-full bg-white/5 backdrop-blur-sm rounded-2xl p-8 ring-1 ring-white/10 shadow-[0_0_20px_rgba(56,189,248,0.15)] space-y-4 mb-12">
+          {/* Main Content Grid */}
+          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-start mb-16">
+            {/* Contact Form */}
+            <form onSubmit={onSubmit} className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 ring-1 ring-white/10 shadow-[0_0_20px_rgba(56,189,248,0.15)] space-y-4">
               <input 
                 name="name" 
                 placeholder="Name" 
@@ -58,30 +59,19 @@ export default function Contact() {
               {status && <p className="text-sm text-center text-cyan-400">{status}</p>}
             </form>
 
-            {/* Contact Info */}
-            <div className="text-center text-sm opacity-70 space-y-2 mb-20">
-              <p>
-                Email: <a href="mailto:hello@andreassentechnology.no" className="hover:underline text-cyan-400/80">hello@andreassentechnology.no</a>
-              </p>
-              <p>Bergen, Norway</p>
-              <p>Mon–Fri, 09:00–17:00</p>
-            </div>
-
             {/* Contact the Founder */}
-            <section className="text-center mt-20">
+            <div className="flex flex-col items-center text-center">
               <h2 className="text-2xl font-semibold mb-6">Contact the Founder</h2>
-              <div className="flex justify-center mb-6">
-                <div className="max-w-sm w-full">
-                  <SimpleProfileCard
-                    name="Martin Andreassen"
-                    role="Founder & CTO — Andreassen Technology"
-                    imageSrc="/CTOaTech.png"
-                    accent="cyan"
-                    intensity={0.25}
-                  />
-                </div>
+              <div className="w-full max-w-sm mb-6">
+                <SimpleProfileCard
+                  name="Martin Andreassen"
+                  role="Founder & CTO — Andreassen Technology"
+                  imageSrc="/CTOaTech.png"
+                  accent="cyan"
+                  intensity={0.25}
+                />
               </div>
-              <div className="flex justify-center gap-4 mt-4">
+              <div className="flex justify-center gap-4">
                 <a 
                   href="https://www.linkedin.com/in/martin-andreassen-895b2a290/" 
                   target="_blank" 
@@ -104,7 +94,16 @@ export default function Contact() {
                   </svg>
                 </a>
               </div>
-            </section>
+            </div>
+          </div>
+
+          {/* Contact Info */}
+          <div className="text-center text-sm opacity-70 space-y-2">
+            <p>
+              Email: <a href="mailto:hello@andreassentechnology.no" className="hover:underline text-cyan-400/80">hello@andreassentechnology.no</a>
+            </p>
+            <p>Bergen, Norway</p>
+            <p>Mon–Fri, 09:00–17:00</p>
           </div>
         </div>
       </main>
