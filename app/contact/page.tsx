@@ -83,7 +83,7 @@ export default function Contact() {
               </div>
               <div className="flex justify-center gap-4 mt-4">
                 <a 
-                  href="https://linkedin.com/in/martinandreassen" 
+                  href="https://www.linkedin.com/in/martin-andreassen-895b2a290/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="rounded-full bg-white/10 hover:bg-white/20 p-3 ring-1 ring-white/10 transition"
