@@ -28,50 +28,56 @@ export default function Contact() {
           </div>
 
           {/* Main Content Grid */}
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-start mb-16">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch mb-16">
             {/* Contact Form */}
-            <form onSubmit={onSubmit} className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 ring-1 ring-white/10 shadow-[0_0_20px_rgba(56,189,248,0.15)] space-y-4">
-              <input 
-                name="name" 
-                placeholder="Name" 
-                required 
-                className="w-full rounded-lg bg-neutral-900/80 px-4 py-3 border border-white/10 focus:ring-2 focus:ring-cyan-400/50 outline-none transition"
-              />
-              <input 
-                type="email" 
-                name="email" 
-                placeholder="Email" 
-                required 
-                className="w-full rounded-lg bg-neutral-900/80 px-4 py-3 border border-white/10 focus:ring-2 focus:ring-cyan-400/50 outline-none transition"
-              />
-              <textarea 
-                name="message" 
-                placeholder="Message" 
-                rows={6} 
-                required 
-                className="w-full rounded-lg bg-neutral-900/80 px-4 py-3 border border-white/10 focus:ring-2 focus:ring-cyan-400/50 outline-none transition resize-none"
-              />
-              <button 
-                className="w-full rounded-xl bg-cyan-500/10 ring-1 ring-cyan-400/30 hover:bg-cyan-500/20 transition-all py-3 font-semibold"
-              >
-                Send Message
-              </button>
-              {status && <p className="text-sm text-center text-cyan-400">{status}</p>}
+            <form onSubmit={onSubmit} className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 ring-1 ring-white/10 shadow-[0_0_20px_rgba(56,189,248,0.15)] flex flex-col justify-between h-full">
+              <div className="space-y-4">
+                <input 
+                  name="name" 
+                  placeholder="Name" 
+                  required 
+                  className="w-full rounded-lg bg-neutral-900/80 px-4 py-3 border border-white/10 focus:ring-2 focus:ring-cyan-400/50 outline-none transition"
+                />
+                <input 
+                  type="email" 
+                  name="email" 
+                  placeholder="Email" 
+                  required 
+                  className="w-full rounded-lg bg-neutral-900/80 px-4 py-3 border border-white/10 focus:ring-2 focus:ring-cyan-400/50 outline-none transition"
+                />
+                <textarea 
+                  name="message" 
+                  placeholder="Message" 
+                  rows={6} 
+                  required 
+                  className="w-full rounded-lg bg-neutral-900/80 px-4 py-3 border border-white/10 focus:ring-2 focus:ring-cyan-400/50 outline-none transition resize-none"
+                />
+              </div>
+              <div>
+                <button 
+                  className="w-full mt-6 rounded-xl bg-cyan-500/10 ring-1 ring-cyan-400/30 hover:bg-cyan-500/20 transition-all py-3 font-semibold"
+                >
+                  Send Message
+                </button>
+                {status && <p className="text-sm text-center text-cyan-400 mt-2">{status}</p>}
+              </div>
             </form>
 
             {/* Contact the Founder */}
-            <div className="flex flex-col items-center text-center">
-              <h2 className="text-2xl font-semibold mb-6">Contact the Founder</h2>
-              <div className="w-full max-w-sm mb-6">
-                <SimpleProfileCard
-                  name="Martin Andreassen"
-                  role="Founder & CTO — Andreassen Technology"
-                  imageSrc="/CTOaTech.png"
-                  accent="cyan"
-                  intensity={0.25}
-                />
+            <div className="flex flex-col justify-between items-center bg-white/5 backdrop-blur-sm rounded-2xl p-8 ring-1 ring-white/10 shadow-[0_0_20px_rgba(56,189,248,0.15)] h-full">
+              <div className="w-full">
+                <h2 className="text-2xl font-semibold mb-6 text-center">Contact the Founder</h2>
+                <div className="w-full max-w-sm mx-auto">
+                  <SimpleProfileCard
+                    name="Martin Andreassen"
+                    role="Founder & CTO — Andreassen Technology"
+                    imageSrc="/CTOaTech.png"
+                    accent="cyan"
+                    intensity={0.25}
+                  />
+                </div>
               </div>
-              <div className="flex justify-center gap-4">
+              <div className="flex justify-center gap-4 mt-6">
                 <a 
                   href="https://www.linkedin.com/in/martin-andreassen-895b2a290/" 
                   target="_blank" 
