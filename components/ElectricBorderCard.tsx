@@ -21,7 +21,7 @@ export default function ElectricBorderCard({ title, href, imageSrc, subtitle }: 
       className="block focus:outline-none focus:ring-2 focus:ring-white/40 focus:ring-offset-2 focus:ring-offset-neutral-950 rounded-xl transition-transform hover:scale-105"
     >
       <ElectricBorder
-        color="#7df9ff"
+        color="#340893"
         speed={1}
         chaos={0.5}
         thickness={2}
