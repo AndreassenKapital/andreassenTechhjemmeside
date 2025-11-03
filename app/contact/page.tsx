@@ -23,7 +23,7 @@ export default function Contact() {
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-3">Contact</h1>
             <p className="text-lg opacity-80">
-              We'd love to hear about your project. Whether you're looking for collaboration, consulting, or full-stack development, reach out below.
+              We&apos;d love to hear about your project. Whether you&apos;re looking for collaboration, consulting, or full-stack development, reach out below.
             </p>
           </div>
 

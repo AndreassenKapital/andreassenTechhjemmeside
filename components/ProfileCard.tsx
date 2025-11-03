@@ -17,14 +17,14 @@ const ANIMATION_CONFIG = {
   DEVICE_BETA_OFFSET: 20
 };
 
-const clamp = (value, min = 0, max = 100) => Math.min(Math.max(value, min), max);
+const clamp = (value: number, min: number = 0, max: number = 100) => Math.min(Math.max(value, min), max);
 
-const round = (value, precision = 3) => parseFloat(value.toFixed(precision));
+const round = (value: number, precision: number = 3) => parseFloat(value.toFixed(precision));
 
-const adjust = (value, fromMin, fromMax, toMin, toMax) =>
+const adjust = (value: number, fromMin: number, fromMax: number, toMin: number, toMax: number) =>
   round(toMin + ((toMax - toMin) * (value - fromMin)) / (fromMax - fromMin));
 
-const easeInOutCubic = x => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const easeInOutCubic = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
 
 const ProfileCardComponent = ({
   avatarUrl = '<Placeholder for avatar URL>',
@@ -45,16 +45,35 @@ const ProfileCardComponent = ({
   contactText = 'Contact',
   showUserInfo = true,
   onContactClick
+}: {
+  avatarUrl?: string;
+  iconUrl?: string;
+  grainUrl?: string;
+  behindGradient?: string;
+  innerGradient?: string;
+  showBehindGradient?: boolean;
+  className?: string;
+  enableTilt?: boolean;
+  enableMobileTilt?: boolean;
+  mobileTiltSensitivity?: number;
+  miniAvatarUrl?: string;
+  name?: string;
+  title?: string;
+  handle?: string;
+  status?: string;
+  contactText?: string;
+  showUserInfo?: boolean;
+  onContactClick?: () => void;
 }) => {
-  const wrapRef = useRef(null);
-  const cardRef = useRef(null);
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
 
   const animationHandlers = useMemo(() => {
     if (!enableTilt) return null;
 
-    let rafId = null;
+    let rafId: number | null = null;
 
-    const updateCardTransform = (offsetX, offsetY, card, wrap) => {
+    const updateCardTransform = (offsetX: number, offsetY: number, card: HTMLElement, wrap: HTMLElement) => {
       const width = card.clientWidth;
       const height = card.clientHeight;
 
@@ -81,12 +100,12 @@ const ProfileCardComponent = ({
       });
     };
 
-    const createSmoothAnimation = (duration, startX, startY, card, wrap) => {
+    const createSmoothAnimation = (duration: number, startX: number, startY: number, card: HTMLElement, wrap: HTMLElement) => {
       const startTime = performance.now();
       const targetX = wrap.clientWidth / 2;
       const targetY = wrap.clientHeight / 2;
 
-      const animationLoop = currentTime => {
+      const animationLoop = (currentTime: number) => {
         const elapsed = currentTime - startTime;
         const progress = clamp(elapsed / duration);
         const easedProgress = easeInOutCubic(progress);
@@ -117,7 +136,7 @@ const ProfileCardComponent = ({
   }, [enableTilt]);
 
   const handlePointerMove = useCallback(
-    event => {
+    (event: PointerEvent) => {
       const card = cardRef.current;
       const wrap = wrapRef.current;
 
@@ -141,16 +160,17 @@ const ProfileCardComponent = ({
   }, [animationHandlers]);
 
   const handlePointerLeave = useCallback(
-    event => {
+    (event: PointerEvent) => {
       const card = cardRef.current;
       const wrap = wrapRef.current;
 
       if (!card || !wrap || !animationHandlers) return;
 
+      const rect = card.getBoundingClientRect();
       animationHandlers.createSmoothAnimation(
         ANIMATION_CONFIG.SMOOTH_DURATION,
-        event.offsetX,
-        event.offsetY,
+        event.clientX - rect.left,
+        event.clientY - rect.top,
         card,
         wrap
       );
@@ -161,7 +181,7 @@ const ProfileCardComponent = ({
   );
 
   const handleDeviceOrientation = useCallback(
-    event => {
+    (event: DeviceOrientationEvent) => {
       const card = cardRef.current;
       const wrap = wrapRef.current;
 
@@ -195,14 +215,14 @@ const ProfileCardComponent = ({
 
     const handleClick = () => {
       if (!enableMobileTilt || location.protocol !== 'https:') return;
-      if (typeof window.DeviceMotionEvent.requestPermission === 'function') {
-        window.DeviceMotionEvent.requestPermission()
-          .then(state => {
+      if (typeof (window.DeviceMotionEvent as any).requestPermission === 'function') {
+        (window.DeviceMotionEvent as any).requestPermission()
+          .then((state: string) => {
             if (state === 'granted') {
               window.addEventListener('deviceorientation', deviceOrientationHandler);
             }
           })
-          .catch(err => console.error(err));
+          .catch((err: any) => console.error(err));
       } else {
         window.addEventListener('deviceorientation', deviceOrientationHandler);
       }
@@ -252,7 +272,7 @@ const ProfileCardComponent = ({
   }, [onContactClick]);
 
   return (
-    <div ref={wrapRef} className={`pc-card-wrapper ${className}`.trim()} style={cardStyle}>
+    <div ref={wrapRef} className={`pc-card-wrapper ${className}`.trim()} style={cardStyle as React.CSSProperties}>
       <section ref={cardRef} className="pc-card">
         <div className="pc-inside">
           <div className="pc-shine" />
@@ -264,7 +284,7 @@ const ProfileCardComponent = ({
               alt={`${name || 'User'} avatar`}
               loading="lazy"
               onError={e => {
-                const target = e.target;
+                const target = e.target as HTMLImageElement;
                 target.style.display = 'none';
               }}
             />
@@ -277,7 +297,7 @@ const ProfileCardComponent = ({
                       alt={`${name || 'User'} mini avatar`}
                       loading="lazy"
                       onError={e => {
-                        const target = e.target;
+                        const target = e.target as HTMLImageElement;
                         target.style.opacity = '0.5';
                         target.src = avatarUrl;
                       }}

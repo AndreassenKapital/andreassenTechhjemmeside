@@ -1,24 +1,24 @@
 "use client";
 
-import { Camera, Mesh, Plane, Program, Renderer, Texture, Transform } from 'ogl';
+import { Camera, Geometry, Mesh, Plane, Program, Renderer, Texture, Transform } from 'ogl';
 
 import { useEffect, useRef } from 'react';
 
 import './CircularGallery.css';
 
-function debounce(func, wait) {
-  let timeout;
-  return function (...args) {
+function debounce(func: (...args: any[]) => void, wait: number) {
+  let timeout: NodeJS.Timeout | undefined;
+  return function (this: any, ...args: any[]) {
     clearTimeout(timeout);
     timeout = setTimeout(() => func.apply(this, args), wait);
   };
 }
 
-function lerp(p1, p2, t) {
+function lerp(p1: number, p2: number, t: number): number {
   return p1 + (p2 - p1) * t;
 }
 
-function autoBind(instance) {
+function autoBind(instance: any) {
   const proto = Object.getPrototypeOf(instance);
   Object.getOwnPropertyNames(proto).forEach(key => {
     if (key !== 'constructor' && typeof instance[key] === 'function') {
@@ -27,9 +27,10 @@ function autoBind(instance) {
   });
 }
 
-function createTextTexture(gl, text, font = 'bold 30px monospace', color = 'black') {
+function createTextTexture(gl: WebGLRenderingContext, text: string, font: string = 'bold 30px monospace', color: string = 'black') {
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
+  if (!context) throw new Error('Could not get 2d context');
   context.font = font;
   const metrics = context.measureText(text);
   const textWidth = Math.ceil(metrics.width);
@@ -50,7 +51,22 @@ function createTextTexture(gl, text, font = 'bold 30px monospace', color = 'blac
 }
 
 class Title {
-  constructor({ gl, plane, renderer, text, textColor = '#545050', font = '30px sans-serif' }) {
+  gl: WebGLRenderingContext;
+  plane: Mesh;
+  renderer: Renderer;
+  text: string;
+  textColor: string;
+  font: string;
+  mesh!: Mesh;
+
+  constructor({ gl, plane, renderer, text, textColor = '#545050', font = '30px sans-serif' }: {
+    gl: WebGLRenderingContext;
+    plane: Mesh;
+    renderer: Renderer;
+    text: string;
+    textColor?: string;
+    font?: string;
+  }) {
     autoBind(this);
     this.gl = gl;
     this.plane = plane;
@@ -108,6 +124,34 @@ class Title {
 }
 
 class Media {
+  extra: number;
+  geometry: Geometry;
+  gl: WebGLRenderingContext;
+  image: string;
+  index: number;
+  length: number;
+  renderer: Renderer;
+  scene: Transform;
+  screen: { width: number; height: number };
+  text: string;
+  viewport: { width: number; height: number };
+  bend: number;
+  textColor: string;
+  borderRadius: number;
+  font: string;
+  href?: string;
+  program!: Program;
+  plane!: Mesh;
+  title!: Title;
+  speed: number = 0;
+  isBefore: boolean = false;
+  isAfter: boolean = false;
+  scale: number = 0;
+  padding: number = 0;
+  width: number = 0;
+  widthTotal: number = 0;
+  x: number = 0;
+
   constructor({
     geometry,
     gl,
@@ -124,6 +168,22 @@ class Media {
     borderRadius = 0,
     font,
     href
+  }: {
+    geometry: Geometry;
+    gl: WebGLRenderingContext;
+    image: string;
+    index: number;
+    length: number;
+    renderer: Renderer;
+    scene: Transform;
+    screen: { width: number; height: number };
+    text: string;
+    viewport: { width: number; height: number };
+    bend: number;
+    textColor: string;
+    borderRadius?: number;
+    font: string;
+    href?: string;
   }) {
     this.extra = 0;
     this.geometry = geometry;
@@ -242,11 +302,11 @@ class Media {
       renderer: this.renderer,
       text: this.text,
       textColor: this.textColor,
-      fontFamily: this.font
+      font: this.font
     });
   }
 
-  update(scroll, direction) {
+  update(scroll: { current: number; last: number }, direction: string) {
     this.plane.position.x = this.x - scroll.current - this.extra;
 
     const x = this.plane.position.x;
@@ -291,7 +351,7 @@ class Media {
     }
   }
 
-  onResize({ screen, viewport } = {}) {
+  onResize({ screen, viewport }: { screen?: { width: number; height: number }; viewport?: { width: number; height: number } } = {}) {
     if (screen) this.screen = screen;
     if (viewport) {
       this.viewport = viewport;
@@ -314,8 +374,32 @@ class Media {
 }
 
 class App {
+  container: HTMLElement;
+  scrollSpeed: number;
+  scroll: { ease: number; current: number; target: number; last: number; position?: number };
+  onCheckDebounce: (...args: any[]) => void;
+  renderer!: Renderer;
+  gl!: WebGLRenderingContext;
+  camera!: Camera;
+  scene!: Transform;
+  screen!: { width: number; height: number };
+  viewport!: { width: number; height: number };
+  planeGeometry!: Plane;
+  mediasImages!: Array<{ image: string; text: string; href?: string }>;
+  medias!: Media[];
+  isDown: boolean = false;
+  hasMoved: boolean = false;
+  start: number = 0;
+  startY: number = 0;
+  raf!: number;
+  boundOnResize!: () => void;
+  boundOnWheel!: (e: Event) => void;
+  boundOnTouchDown!: (e: TouchEvent | MouseEvent) => void;
+  boundOnTouchMove!: (e: TouchEvent | MouseEvent) => void;
+  boundOnTouchUp!: (e: TouchEvent | MouseEvent) => void;
+
   constructor(
-    container,
+    container: HTMLElement,
     {
       items,
       bend,
@@ -324,6 +408,14 @@ class App {
       font = 'bold 30px Figtree',
       scrollSpeed = 2,
       scrollEase = 0.05
+    }: {
+      items?: Array<{ image: string; text: string; href?: string }>;
+      bend?: number;
+      textColor?: string;
+      borderRadius?: number;
+      font?: string;
+      scrollSpeed?: number;
+      scrollEase?: number;
     } = {}
   ) {
     document.documentElement.classList.remove('no-js');
@@ -353,7 +445,7 @@ class App {
     this.gl = this.renderer.gl;
     this.gl.clearColor(0, 0, 0, 0);
 
-    this.container.appendChild(this.gl.canvas);
+    this.container.appendChild(this.gl.canvas as HTMLCanvasElement);
   }
 
   createCamera() {
@@ -373,7 +465,7 @@ class App {
     });
   }
 
-  createMedias(items, bend = 1, textColor, borderRadius, font) {
+  createMedias(items: Array<{ image: string; text: string; href?: string }> | undefined, bend: number = 1, textColor: string, borderRadius: number, font: string) {
     const defaultItems = [
       { image: `https://picsum.photos/seed/1/800/600?grayscale`, text: 'Bridge' },
       { image: `https://picsum.photos/seed/2/800/600?grayscale`, text: 'Desk Setup' },
@@ -413,19 +505,19 @@ class App {
     });
   }
 
-  onTouchDown(e) {
+  onTouchDown(e: TouchEvent | MouseEvent) {
     this.isDown = true;
     this.scroll.position = this.scroll.current;
-    this.start = e.touches ? e.touches[0].clientX : e.clientX;
-    this.startY = e.touches ? e.touches[0].clientY : e.clientY;
+    this.start = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    this.startY = 'touches' in e ? e.touches[0].clientY : e.clientY;
     this.hasMoved = false;
   }
 
-  onTouchMove(e) {
+  onTouchMove(e: TouchEvent | MouseEvent) {
     if (!this.isDown) return;
 
-    const x = e.touches ? e.touches[0].clientX : e.clientX;
-    const y = e.touches ? e.touches[0].clientY : e.clientY;
+    const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const y = 'touches' in e ? e.touches[0].clientY : e.clientY;
     const distance = (this.start - x) * (this.scrollSpeed * 0.025);
 
     // Check if user has moved significantly
@@ -433,14 +525,14 @@ class App {
       this.hasMoved = true;
     }
 
-    this.scroll.target = this.scroll.position + distance;
+    this.scroll.target = this.scroll.position! + distance;
   }
 
-  onTouchUp(e) {
+  onTouchUp(e: TouchEvent | MouseEvent) {
     if (this.isDown && !this.hasMoved) {
       // It's a click, try to find which media was clicked
-      const clickX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
-      const clickY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+      const clickX = 'changedTouches' in e ? e.changedTouches[0].clientX : e.clientX;
+      const clickY = 'changedTouches' in e ? e.changedTouches[0].clientY : e.clientY;
       this.handleClick(clickX, clickY);
     }
 
@@ -448,7 +540,7 @@ class App {
     this.onCheck();
   }
 
-  handleClick(x, y) {
+  handleClick(x: number, y: number) {
     if (!this.medias) return;
 
     // Convert screen coordinates to viewport coordinates
@@ -466,8 +558,8 @@ class App {
     }
   }
 
-  onWheel(e) {
-    const delta = e.deltaY || e.wheelDelta || e.detail;
+  onWheel(e: WheelEvent | Event) {
+    const delta = ('deltaY' in e ? e.deltaY : 0) || ('wheelDelta' in e ? (e as any).wheelDelta : 0) || ('detail' in e ? e.detail : 0);
     this.scroll.target += (delta > 0 ? this.scrollSpeed : -this.scrollSpeed) * 0.2;
     this.onCheckDebounce();
   }
@@ -566,10 +658,19 @@ export default function CircularGallery({
   font = 'bold 30px Figtree',
   scrollSpeed = 2,
   scrollEase = 0.05
+}: {
+  items?: Array<{ image: string; text: string; href?: string }>;
+  bend?: number;
+  textColor?: string;
+  borderRadius?: number;
+  font?: string;
+  scrollSpeed?: number;
+  scrollEase?: number;
 }) {
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!containerRef.current) return;
     const app = new App(containerRef.current, { items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase });
 
     return () => {

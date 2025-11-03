@@ -4,12 +4,20 @@ import { useEffect, useId, useLayoutEffect, useRef } from 'react';
 
 import './ElectricBorder.css';
 
-const ElectricBorder = ({ children, color = '#5227FF', speed = 1, chaos = 1, thickness = 2, className, style }) => {
+const ElectricBorder = ({ children, color = '#5227FF', speed = 1, chaos = 1, thickness = 2, className, style }: {
+  children: React.ReactNode;
+  color?: string;
+  speed?: number;
+  chaos?: number;
+  thickness?: number;
+  className?: string;
+  style?: React.CSSProperties;
+}) => {
   const rawId = useId().replace(/[:]/g, '');
   const filterId = `turbulent-displace-${rawId}`;
-  const svgRef = useRef(null);
-  const rootRef = useRef(null);
-  const strokeRef = useRef(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const strokeRef = useRef<HTMLDivElement | null>(null);
 
   const updateAnim = () => {
     const svg = svgRef.current;
@@ -52,9 +60,9 @@ const ElectricBorder = ({ children, color = '#5227FF', speed = 1, chaos = 1, thi
 
     requestAnimationFrame(() => {
       [...dyAnims, ...dxAnims].forEach(a => {
-        if (typeof a.beginElement === 'function') {
+        if (typeof (a as any).beginElement === 'function') {
           try {
-            a.beginElement();
+            (a as any).beginElement();
           } catch {
             console.warn('ElectricBorder: beginElement failed, this may be due to a browser limitation.');
           }

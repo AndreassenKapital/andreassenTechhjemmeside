@@ -109,7 +109,7 @@ export default function DecryptedText({
       setRevealedIndices(new Set());
       setIsScrambling(false);
     }
-    return () => interval && window.clearInterval(interval);
+    return () => { if (interval) window.clearInterval(interval); };
   }, [isHovering, text, speed, maxIterations, sequential, revealDirection, characters, useOriginalCharsOnly]);
 
   useEffect(() => {
@@ -130,8 +130,9 @@ export default function DecryptedText({
     ? { onMouseEnter: () => setIsHovering(true), onMouseLeave: () => setIsHovering(false) }
     : {};
 
+  const { onDrag, onDragStart, onDragEnd, onAnimationStart, onAnimationEnd, onAnimationIteration, ...restProps } = props;
   return (
-    <motion.span ref={containerRef} className={parentClassName} {...hoverProps} {...props}>
+    <motion.span ref={containerRef} className={parentClassName} {...hoverProps} {...restProps as any}>
       <span className="sr-only">{displayText}</span>
       <span aria-hidden="true">
         {displayText.split("").map((ch, i) => {
