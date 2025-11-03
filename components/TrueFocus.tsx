@@ -87,7 +87,7 @@ export default function TrueFocus({
         return (
           <span
             key={index}
-            ref={el => { wordRefs.current[index] = el; }}
+            ref={el => (wordRefs.current[index] = el)}
             className={`focus-word ${manualMode ? "manual" : ""} ${isActive && !manualMode ? "active" : ""}`}
             style={{
               filter: animationComplete || isActive ? "blur(0px)" : `blur(${blurAmount}px)`,

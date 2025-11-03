@@ -20,7 +20,7 @@ export default function Home() {
 
           {/* Innhold */}
           <div className="relative z-10 h-full flex flex-col items-center justify-center text-center container-p">
-            <TrueFocus sentence="Andreassen Technology" maxCycles={2} className="mb-6" />
+            <TrueFocus sentence="Andreassen Technology" className="mb-6" />
             <DecryptedText
               text="Modern software & AI for ambitious teams"
               animateOn="view"
